@@ -1,0 +1,24 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  username String @unique
+  password String
+  role     String
+}
+
+model Ticket {
+  id           Int      @id @default(autoincrement())
+  ticketNumber String   @unique
+  category     String
+  status       String   @default("LISTED")
+  soldAt       DateTime?
+  verifiedAt   DateTime?
+}
