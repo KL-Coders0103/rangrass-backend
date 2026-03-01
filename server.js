@@ -250,6 +250,7 @@ app.get("/admin/export", async (req, res) => {
 
 app.get("/admin/stats", async (req, res) => {
 
+  // TOTAL
   const listed = await prisma.ticket.count({
     where: { status: "LISTED" }
   });
@@ -258,17 +259,22 @@ app.get("/admin/stats", async (req, res) => {
     where: { status: "SOLD" }
   });
 
+
+  // LISTED CATEGORY
   const listedByCategory = await prisma.ticket.groupBy({
     by: ["category"],
     where: { status: "LISTED" },
     _count: true
   });
 
+
+  // SOLD CATEGORY
   const soldByCategory = await prisma.ticket.groupBy({
     by: ["category"],
     where: { status: "SOLD" },
     _count: true
   });
+
 
   res.send({
     listed,
