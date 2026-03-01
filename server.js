@@ -248,6 +248,36 @@ app.get("/admin/export", async (req, res) => {
   res.end();
 });
 
+app.get("/admin/stats", async (req, res) => {
+
+  const listed = await prisma.ticket.count({
+    where: { status: "LISTED" }
+  });
+
+  const sold = await prisma.ticket.count({
+    where: { status: "SOLD" }
+  });
+
+  const listedByCategory = await prisma.ticket.groupBy({
+    by: ["category"],
+    where: { status: "LISTED" },
+    _count: true
+  });
+
+  const soldByCategory = await prisma.ticket.groupBy({
+    by: ["category"],
+    where: { status: "SOLD" },
+    _count: true
+  });
+
+  res.send({
+    listed,
+    sold,
+    listedByCategory,
+    soldByCategory
+  });
+});
+
 
 // ===============================
 // ⚡ SOCKET SYNC
